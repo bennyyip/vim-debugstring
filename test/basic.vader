@@ -1,0 +1,84 @@
+Include: env_setup.vader
+Include: text_setup.vader
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+""
+" Tests include the following
+" - Add Debugging string when I am in a line that has text + make sure the
+"   counter advances
+" - Add Debugging string when I am on an empty line
+" - Add a variable debugging string when I am in a line that has text
+After ():
+  " Log(&filetype)
+  execute l1_text - 1
+  AssertEqual getline('.'), "And each in your season", "Current line contents don't match"
+  :normal ,ds
+  :normal .
+  execute l1_notext
+  AssertEqual getline('.'), '', "Current line is not empty"
+  :normal ,ds
+  execute l1_text_var - 1
+  execute ":normal ,dSa**2 + b**2\<CR>"
+
+  execute l1_text
+  AssertEqual getline('.'), FormatStrForExpectedLine(GetFileForLang(&filetype, 1), l1_text, 0)
+  execute l2_text
+  AssertEqual getline('.'), FormatStrForExpectedLine(GetFileForLang(&filetype, 1), l2_text, 1)
+  execute l1_notext
+  AssertEqual getline('.'), FormatStrForExpectedLine(GetFileForLang(&filetype, 1), l1_notext, 2)
+  execute l1_text_var
+  AssertEqual getline('.'), FormatStrForExpectedLine(GetFileForLang(&filetype, 2), l1_text_var, -1)
+
+================================================================================
+
+""
+" Test cases - one for each supported language
+Execute (C):
+  :set filetype=c
+Execute (C++):
+  :set filetype=cpp
+Execute (C#):
+  :set filetype=cs
+Execute (CMake):
+  :set filetype=cmake
+Execute (Haskell):
+  :set filetype=haskell
+Execute (Java):
+  :set filetype=java
+Execute (Javascript):
+  :set filetype=javascript
+Execute (Typescript):
+  :set filetype=typescript
+Execute (Python):
+  :set filetype=python
+Execute (R):
+  :set filetype=r
+" For some reason putting this block after `Python` or `Ruby` makes this test
+" crash... no sensible explanation, should be a Vader bug.
+Execute (Rust):
+  :set filetype=rust
+Execute (Ruby):
+  :set filetype=ruby
+Execute (Shell):
+  :set filetype=sh
+Execute (Zsh):
+  :set filetype=zsh
+Execute (Vim):
+  :set filetype=vim
+Execute (Fortran):
+  :set filetype=fortran
+Execute (Go):
+  :set filetype=go
+Execute (Arduino):
+  :set filetype=arduino
+Execute (Makefile):
+  :set filetype=make
+Execute (Dockerfile):
+  :set filetype=Dockerfile
+Execute (Lua):
+  :set filetype=lua
+
+================================================================================
+
+# vim: ft=vader
